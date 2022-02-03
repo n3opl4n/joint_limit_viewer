@@ -55,13 +55,12 @@ int main(int argc, char **argv)
 
   timer = 0;
 
-  n.getParam("show_joints_states/joint_limit_warning", joint_limit_warning);
-  n.getParam("show_joints_states/upper_joint_limit", upper_joint_limit);
-  n.getParam("show_joints_states/lower_joint_limit", lower_joint_limit);
+  n.getParam("joint_limit_viewer/joint_limit_warning", joint_limit_warning);
+  n.getParam("joint_limit_viewer/upper_joint_limit", upper_joint_limit);
+  n.getParam("joint_limit_viewer/lower_joint_limit", lower_joint_limit);
 
   if (upper_joint_limit.size() == lower_joint_limit.size()){
     joints = upper_joint_limit.size();
-    std::cout << upper_joint_limit.size() << " . " << joints << std::endl;
   }
   else {
     ROS_ERROR("Size of 'upper_joint_limit' not equal to size of 'lower_joint_limit'.");
@@ -70,6 +69,7 @@ int main(int argc, char **argv)
 
   ros::Subscriber sub = n.subscribe("joint_states", 1, chatterCallback);
 
+  std::cout << "Waiting for callback...\n;";
   ros::spin();
 
   return 0;

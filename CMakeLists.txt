@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(show_joint_states)
+project(joint_limit_viewer)
 
 add_compile_options(-std=c++11)
 

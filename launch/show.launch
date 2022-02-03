@@ -1,14 +1,14 @@
 <launch>
     <arg name="node_name"
-         default="show_joints_states" />
+         default="joint_limit_viewer" />
 <!-- <arg name="launch-prefix" value="valgrind"/>   -->
-    <node pkg="show_joint_states"
-          type="show_joint_states_node"
+    <node pkg="joint_limit_viewer"
+          type="joint_limit_viewer_node"
           name="$(arg node_name)"
           output="screen">
 
               <rosparam command="load"
-                file="$(find show_joint_states)/config/config.yml" />
+                file="$(find joint_limit_viewer)/config/config.yml" />
     </node>
 
 </launch>
