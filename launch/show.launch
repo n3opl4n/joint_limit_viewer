@@ -1,0 +1,14 @@
+<launch>
+    <arg name="node_name"
+         default="show_joints_states" />
+<!-- <arg name="launch-prefix" value="valgrind"/>   -->
+    <node pkg="show_joint_states"
+          type="show_joint_states_node"
+          name="$(arg node_name)"
+          output="screen">
+
+              <rosparam command="load"
+                file="$(find show_joint_states)/config/config.yml" />
+    </node>
+
+</launch>

@@ -1,0 +1,11 @@
+#Add parameters in degrees
+
+#for IIWA 7
+# upper_joint_limit: [ 170,  120,  170,  120,  170,  120,  175]
+# lower_joint_limit: [-170, -120, -170, -120, -170, -120, -175]
+
+#for KUKA KR150 R2700 (CRF)
+upper_joint_limit: [ 185,   -5,  168,  350,  125,  350]
+lower_joint_limit: [-185, -140, -120, -350, -125, -350]
+
+joint_limit_warning: 6 #show warning when join is that close to limit
