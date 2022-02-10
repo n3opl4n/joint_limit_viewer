@@ -6,7 +6,8 @@
 
 int joints;
 double joint_limit_warning; //show joint limit warning when a joint is lower than this angle to the limit
-std::vector<double> upper_joint_limit, lower_joint_limit;
+std::vector<double> upper_joint_limit, lower_joint_limit, joint_range;
+double max_range;
 
 static const double RAD2DEG = 57.295779513082323;
 static const double DEG2RAD = 0.017453292519943295;
@@ -21,6 +22,8 @@ void chatterCallback(const sensor_msgs::JointState::ConstPtr& msg)
     if ( msg->position.size() != upper_joint_limit.size() )
       ROS_WARN("Incoming joint_states size (%d) is different from joint_limit size (%d)", (int)msg->position.size(), (int)upper_joint_limit.size());
 
+    std::cout << std::endl;  
+    double scale_fill;
     for (size_t i = 0; i < joints; i++){
       double joint_value = RAD2DEG * msg->position[i]; 
 
@@ -31,9 +34,14 @@ void chatterCallback(const sensor_msgs::JointState::ConstPtr& msg)
         limit_flag = true;
       }
 
+      double scale_fill = joint_range[i] / max_range * 10;
+
       std::cout << std::setw(1) << std::fixed << std::setprecision(0) << "(" << lower_joint_limit[i] << ")";
-      std::cout << std::setw(8) << std::fixed << std::setprecision(1) << joint_value;
-      std::cout << std::setw(4) << std::fixed << std::setprecision(0) << "(" << upper_joint_limit[i] << ")";
+
+      std::cout << std::setfill('*') << std::setw((joint_value - lower_joint_limit[i])/scale_fill);
+      std::cout <<  std::fixed << std::setprecision(1) << joint_value;
+      std::cout << std::setfill('*') << std::setw((upper_joint_limit[i] - joint_value)/scale_fill);
+      std::cout << std::fixed << std::setprecision(0) << "(" << upper_joint_limit[i] << ")";
 
       //show warning
       if (limit_flag) 
@@ -41,6 +49,7 @@ void chatterCallback(const sensor_msgs::JointState::ConstPtr& msg)
         // std::cout << " Limit!!!";
 
       std::cout << std::endl;  
+
     }
   }
   timer++;
@@ -66,6 +75,13 @@ int main(int argc, char **argv)
     ROS_ERROR("Size of 'upper_joint_limit' not equal to size of 'lower_joint_limit'.");
     return -1;
   }
+
+  joint_range.resize(joints);
+  for (size_t i = 0; i < joints; i++){
+    joint_range[i] = upper_joint_limit[i] - lower_joint_limit[i];
+  }
+  auto max_elem = std::max_element(std::begin(joint_range), std::end(joint_range));
+  max_range = joint_range.at(std::distance(joint_range.begin(), max_elem));
 
   ros::Subscriber sub = n.subscribe("joint_states", 1, chatterCallback);
 
